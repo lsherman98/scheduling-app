@@ -46,7 +46,7 @@ function EditModal({ doctorId, setShowEditModal, appointment, setReload }) {
                 <input
                     type="text"
                     className="form-control"
-                    name="firstName"
+                    name="patientFirstName"
                     placeholder="First Name"
                     value={formData.patientFirstName}
                     onChange={handleInputChange}
@@ -55,7 +55,7 @@ function EditModal({ doctorId, setShowEditModal, appointment, setReload }) {
                 <input
                     type="text"
                     className="form-control"
-                    name="lastName"
+                    name="patientLastName"
                     placeholder="Last Name"
                     value={formData.patientLastName}
                     onChange={handleInputChange}
