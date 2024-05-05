@@ -21,6 +21,22 @@ async function seed() {
             doctorId: 1,
         },
         {
+            date: "2024-05-15",
+            time: "12:15",
+            patientFirstName: "Michael",
+            patientLastName: "Smith",
+            visitType: "follow_up",
+            doctorId: 1,
+        },
+        {
+            date: "2024-05-15",
+            time: "12:15",
+            patientFirstName: "Michael",
+            patientLastName: "Smith",
+            visitType: "follow_up",
+            doctorId: 1,
+        },
+        {
             date: "2024-05-28",
             time: "10:30",
             patientFirstName: "Sarah",

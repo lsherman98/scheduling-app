@@ -2,6 +2,8 @@ import { useState } from "react";
 import { createAppointment } from "./utils";
 
 function CreateModal({ doctorId, setShowCreateModal, setReload }) {
+    const [errors, setErrors] = useState("");
+
     const [formData, setFormData] = useState({
         date: "",
         time: "",
@@ -16,17 +18,39 @@ function CreateModal({ doctorId, setShowCreateModal, setReload }) {
         setFormData({ ...formData, [name]: value });
     };
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
-        createAppointment(doctorId, formData);
-        setShowCreateModal(false);
-        setReload(true);
+        const response = await createAppointment(doctorId, formData);
+        if (response) {
+            setErrors(response)
+        } else {
+            setShowCreateModal(false);
+            setReload(true);
+        }
     }
 
-    
+    const handleTimeChange = (event) => {
+        setErrors("");
+        const { name, value } = event.target;
+        let minutes = value.split(":")[1];
+        if (
+            minutes !== "00" &&
+            minutes !== "15" &&
+            minutes !== "30" &&
+            minutes !== "45"
+        ) {
+            setErrors(
+                "Appointments can only be scheduled at :00, :15, :30, or :45"
+            );
+            setFormData({ ...formData, [name]: "" });
+            return;
+        }
+        setFormData({ ...formData, [name]: value });
+    };
 
     return (
         <form onSubmit={handleSubmit}>
+            <p>{errors}</p>
             <div className="mb-3">
                 <input
                     type="date"
@@ -42,7 +66,7 @@ function CreateModal({ doctorId, setShowCreateModal, setReload }) {
                     step="900"
                     name="time"
                     value={formData.time}
-                    onChange={handleInputChange}
+                    onChange={handleTimeChange}
                     required
                 />
                 <input

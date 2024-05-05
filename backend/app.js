@@ -17,73 +17,106 @@ app.use(express.json());
 
 //DOCTORS
 app.get("/doctors", async (req, res) => {
-    const doctors = await Doctor.findAll();
-    res.send(doctors);
+    try {
+        const doctors = await Doctor.findAll();
+        res.status(200).send(doctors);
+    } catch (err) {
+        res.status(500).send('Server Error')
+    }
 });
 
 //APPOINTMENTS
 app.get("/doctors/:doctorID/appointments", async (req, res) => {
-    const doctorId = req.params.doctorID;
-    const doctor = await Doctor.findOne({
-        where: { id: doctorId },
-        include: [
-            {
-                model: Appointment,
-                as: "appointments",
-            },
-        ],
-    });
-    const appointments = doctor.appointments;
-    res.send(appointments);
+    try {
+        const doctorId = req.params.doctorID;
+        const doctor = await Doctor.findOne({
+            where: { id: doctorId },
+            include: [
+                {
+                    model: Appointment,
+                    as: "appointments",
+                },
+            ],
+        });
+        const appointments = doctor.appointments;
+        res.status(200).send(appointments);
+    } catch (err) {
+        res.status(500).send("Server Error");
+    }   
 });
 
 app.post("/doctors/:doctorID/appointments", async (req, res) => {
-    const doctorId = req.params.doctorID;
-    const appointments = await Appointment.findAndCountAll({
-        where: {
-            doctorId: doctorId,
-            date: new Date(req.body.date),
-            time: req.body.time,
-        },
-    });
-    if (appointments.count === 3) {
-        res.json({ message: "This time slot is all booked up" });
-        return;
+    try {
+        const doctorId = req.params.doctorID;
+        const appointments = await Appointment.findAndCountAll({
+            where: {
+                doctorId: doctorId,
+                date: new Date(req.body.date),
+                time: req.body.time,
+            },
+        });
+        if (appointments.count === 3) {
+            res.status(501).json({ message: "This time slot is all booked up" });
+            return;
+        }
+        await Appointment.create(req.body);
+        res.status(200).json({
+            message: "Appointment has been added",
+           
+        });
+    } catch (err) {
+        res.status(500).send("Server Error");
     }
-    await Appointment.create(req.body);
-    res.status(200).json({
-        message: "Appointment has been added",
-       
-    });
 });
 
 app.put("/appointments/:appointmentId", async (req, res) => {
-    const {
-        date,
-        time,
-        patientFirstName,
-        patientLastName,
-        visitType,
-        doctorId,
-    } = req.body;
-    const appointmentId = req.params.appointmentId;
-    await Appointment.update(
-        {
+    try {
+        const {
             date,
             time,
             patientFirstName,
             patientLastName,
             visitType,
-        },
-        { where: { id: appointmentId } }
-    );
-    res.json({ message: "Appointment Updated" });
+            doctorId,
+        } = req.body;
+        const appointmentId = req.params.appointmentId;
+        const appointments = await Appointment.findAndCountAll({
+            where: {
+                doctorId: doctorId,
+                date: new Date(req.body.date),
+                time: req.body.time,
+            },
+        });
+        if (appointments.count === 3) {
+            res.status(501).json({
+                message: "This time slot is all booked up",
+            });
+            return;
+        }
+        await Appointment.update(
+            {
+                date,
+                time,
+                patientFirstName,
+                patientLastName,
+                visitType,
+            },
+            { where: { id: appointmentId } }
+        );
+        res.status(200).json({ message: "Appointment Updated" });
+    } catch (err) {
+        res.status(500).send("Server Error");
+    }
 });
 
 app.delete("/appointments/:appointmentId", async (req, res) => {
-    const appointmentId = req.params.appointmentId;
-    await Appointment.destroy({ where: { id: appointmentId } });
-    res.json({ message: "Appointment Deleted" });
+    try {
+        const appointmentId = req.params.appointmentId;
+        await Appointment.destroy({ where: { id: appointmentId } });
+        res.status(200).json({ message: "Appointment Deleted" });
+    } catch (err) {
+        res.status(500).send("Server Error");
+    }
 });
 
 app.listen(3001, () => {

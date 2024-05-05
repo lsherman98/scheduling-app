@@ -17,32 +17,64 @@ async function getAppointments(doctorId) {
 }
 
 async function createAppointment(doctorId, data) {
-    await fetch(`http://localhost:3001/doctors/${doctorId}/appointments`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
+    const response = await fetch(
+        `http://localhost:3001/doctors/${doctorId}/appointments`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        }
+    );
+    if (response.status === 501) {
+        const json = await response.json();
+        return json.message;
+    }
+    if (!response.ok) {
+        return "Something went wrong";
+    }
+    const json = await response.json();
+    console.log(json);
 }
 
 async function updateAppointment(appointmentId, data) {
-    await fetch(`http://localhost:3001/appointments/${appointmentId}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
+    const response = await fetch(
+        `http://localhost:3001/appointments/${appointmentId}`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        }
+    );
+    if (response.status === 501) {
+        const json = await response.json();
+        return json.message;
+    }
+    if (!response.ok) {
+        return "Something went wrong";
+    }
+    const json = await response.json();
+    console.log(json);
 }
 
 async function deleteAppointment(appointmentId) {
-    await fetch(`http://localhost:3001/appointments/${appointmentId}`, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+    const response = await fetch(
+        `http://localhost:3001/appointments/${appointmentId}`,
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
+    if (!response.ok) {
+        return "Something went wrong";
+    }
+    const json = await response.json();
+    console.log(json);
 }
 
 module.exports = {
@@ -50,5 +82,5 @@ module.exports = {
     getAppointments,
     createAppointment,
     updateAppointment,
-    deleteAppointment
+    deleteAppointment,
 };
