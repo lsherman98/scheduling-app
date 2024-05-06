@@ -1,6 +1,11 @@
 import "./app.css";
 import { useEffect, useState } from "react";
-import { deleteAppointment, getAppointments, getDoctors } from "./utils";
+import {
+    deleteAppointment,
+    filterAppointments,
+    getAppointments,
+    getDoctors,
+} from "./utils";
 import EditModal from "./editModal.js";
 import CreateModal from "./createModal.js";
 
@@ -43,10 +48,7 @@ function Dashboard() {
         setFilterDate(event.target.value);
     }
 
-    const filteredAppointments = appointments.filter((appointment) => {
-        if (!filterDate) return true;
-        return appointment.date.split("T")[0] === filterDate;
-    });
+    const filteredAppointments = filterAppointments(appointments, filterDate);
 
     return (
         <>
@@ -144,21 +146,21 @@ function Dashboard() {
                         />
                     </label>
                 </div>
-            {showCreateModal && (
-                <CreateModal
-                    doctorId={selectedDoctor}
-                    setShowCreateModal={setShowCreateModal}
-                    setReload={setReload}
-                />
-            )}
-            {showEditModal && (
-                <EditModal
-                    doctorId={selectedDoctor}
-                    setShowEditModal={setShowEditModal}
-                    appointment={selectedAppt}
-                    setReload={setReload}
-                />
-            )}
+                {showCreateModal && (
+                    <CreateModal
+                        doctorId={selectedDoctor}
+                        setShowCreateModal={setShowCreateModal}
+                        setReload={setReload}
+                    />
+                )}
+                {showEditModal && (
+                    <EditModal
+                        doctorId={selectedDoctor}
+                        setShowEditModal={setShowEditModal}
+                        appointment={selectedAppt}
+                        setReload={setReload}
+                    />
+                )}
             </div>
         </>
     );

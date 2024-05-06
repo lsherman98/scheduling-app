@@ -38,7 +38,7 @@ async function seed() {
         },
         {
             date: "2024-05-28",
-            time: "10:30",
+            time: "16:30",
             patientFirstName: "Sarah",
             patientLastName: "Williams",
             visitType: "new_patient",
@@ -46,7 +46,7 @@ async function seed() {
         },
         {
             date: "2024-05-19",
-            time: "10:30",
+            time: "9:30",
             patientFirstName: "David",
             patientLastName: "Brown",
             visitType: "follow_up",
@@ -54,7 +54,7 @@ async function seed() {
         },
         {
             date: "2024-05-07",
-            time: "10:30",
+            time: "15:00",
             patientFirstName: "Emily",
             patientLastName: "Anderson",
             visitType: "new_patient",
@@ -86,7 +86,7 @@ async function seed() {
         },
         {
             date: "2024-05-25",
-            time: "10:30",
+            time: "14:30",
             patientFirstName: "Olivia",
             patientLastName: "Lopez",
             visitType: "follow_up",
@@ -94,7 +94,7 @@ async function seed() {
         },
         {
             date: "2024-05-16",
-            time: "10:30",
+            time: "13:30",
             patientFirstName: "Noah",
             patientLastName: "Rodriguez",
             visitType: "new_patient",
@@ -102,7 +102,7 @@ async function seed() {
         },
         {
             date: "2024-05-09",
-            time: "10:30",
+            time: "10:15",
             patientFirstName: "Emma",
             patientLastName: "Hernandez",
             visitType: "follow_up",

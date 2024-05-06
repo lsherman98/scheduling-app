@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createAppointment } from "./utils";
+import { checkMinutes, createAppointment } from "./utils";
 
 function CreateModal({ doctorId, setShowCreateModal, setReload }) {
     const [errors, setErrors] = useState("");
@@ -22,7 +22,7 @@ function CreateModal({ doctorId, setShowCreateModal, setReload }) {
         event.preventDefault();
         const response = await createAppointment(doctorId, formData);
         if (response) {
-            setErrors(response)
+            setErrors(response);
         } else {
             setShowCreateModal(false);
             setReload(true);
@@ -32,13 +32,7 @@ function CreateModal({ doctorId, setShowCreateModal, setReload }) {
     const handleTimeChange = (event) => {
         setErrors("");
         const { name, value } = event.target;
-        let minutes = value.split(":")[1];
-        if (
-            minutes !== "00" &&
-            minutes !== "15" &&
-            minutes !== "30" &&
-            minutes !== "45"
-        ) {
+        if (!checkMinutes(value)) {
             setErrors(
                 "Appointments can only be scheduled at :00, :15, :30, or :45"
             );
@@ -92,8 +86,8 @@ function CreateModal({ doctorId, setShowCreateModal, setReload }) {
                     value={formData.visitType}
                     onChange={handleInputChange}
                 >
-                    <option>New Patient</option>
-                    <option>Follow Up</option>
+                    <option value="new_patient">New Patient</option>
+                    <option value="follow_up">Follow Up</option>
                 </select>
             </div>
             <button type="submit" className="btn btn-primary">

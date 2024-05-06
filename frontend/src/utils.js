@@ -1,19 +1,21 @@
 async function getDoctors() {
     const response = await fetch("http://localhost:3001/doctors");
-    const data = await response.json();
-    if (response.ok) {
-        return data;
+    const doctors = await response.json();
+    if (!response.ok) {
+        return "Something went wrong";
     }
+    return doctors;
 }
 
 async function getAppointments(doctorId) {
     const response = await fetch(
         `http://localhost:3001/doctors/${doctorId}/appointments`
     );
-    const data = await response.json();
-    if (response.ok) {
-        return data;
+    const appointments = await response.json();
+    if (!response.ok) {
+        return "Something went wrong";
     }
+    return appointments;
 }
 
 async function createAppointment(doctorId, data) {
@@ -27,15 +29,14 @@ async function createAppointment(doctorId, data) {
             body: JSON.stringify(data),
         }
     );
+    const json = await response.json();
     if (response.status === 501) {
-        const json = await response.json();
         return json.message;
     }
     if (!response.ok) {
         return "Something went wrong";
     }
-    const json = await response.json();
-    console.log(json);
+    console.log(json.message);
 }
 
 async function updateAppointment(appointmentId, data) {
@@ -49,15 +50,14 @@ async function updateAppointment(appointmentId, data) {
             body: JSON.stringify(data),
         }
     );
+    const json = await response.json();
     if (response.status === 501) {
-        const json = await response.json();
         return json.message;
     }
     if (!response.ok) {
         return "Something went wrong";
     }
-    const json = await response.json();
-    console.log(json);
+    console.log(json.message);
 }
 
 async function deleteAppointment(appointmentId) {
@@ -74,7 +74,28 @@ async function deleteAppointment(appointmentId) {
         return "Something went wrong";
     }
     const json = await response.json();
-    console.log(json);
+    console.log(json.message);
+}
+
+function checkMinutes(value) {
+    let minutes = value.split(":")[1];
+    if (
+        minutes !== "00" &&
+        minutes !== "15" &&
+        minutes !== "30" &&
+        minutes !== "45"
+    ) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function filterAppointments(appointments, filterDate) {
+    return appointments.filter((appointment) => {
+        if (!filterDate) return true;
+        return appointment.date.split("T")[0] === filterDate;
+    });
 }
 
 module.exports = {
@@ -83,4 +104,6 @@ module.exports = {
     createAppointment,
     updateAppointment,
     deleteAppointment,
+    checkMinutes,
+    filterAppointments,
 };

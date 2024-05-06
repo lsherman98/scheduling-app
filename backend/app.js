@@ -15,17 +15,15 @@ app.use(cors());
 
 app.use(express.json());
 
-//DOCTORS
 app.get("/doctors", async (req, res) => {
     try {
         const doctors = await Doctor.findAll();
         res.status(200).send(doctors);
     } catch (err) {
-        res.status(500).send('Server Error')
+        res.status(500).send("Server Error");
     }
 });
 
-//APPOINTMENTS
 app.get("/doctors/:doctorID/appointments", async (req, res) => {
     try {
         const doctorId = req.params.doctorID;
@@ -42,7 +40,7 @@ app.get("/doctors/:doctorID/appointments", async (req, res) => {
         res.status(200).send(appointments);
     } catch (err) {
         res.status(500).send("Server Error");
-    }   
+    }
 });
 
 app.post("/doctors/:doctorID/appointments", async (req, res) => {
@@ -56,13 +54,14 @@ app.post("/doctors/:doctorID/appointments", async (req, res) => {
             },
         });
         if (appointments.count === 3) {
-            res.status(501).json({ message: "This time slot is all booked up" });
+            res.status(501).json({
+                message: "This time slot is all booked up",
+            });
             return;
         }
         await Appointment.create(req.body);
         res.status(200).json({
             message: "Appointment has been added",
-           
         });
     } catch (err) {
         res.status(500).send("Server Error");

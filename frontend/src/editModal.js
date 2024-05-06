@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { updateAppointment } from "./utils";
+import { checkMinutes, updateAppointment } from "./utils";
 
 function EditModal({ doctorId, setShowEditModal, appointment, setReload }) {
     const [formData, setFormData] = useState({
@@ -10,6 +10,7 @@ function EditModal({ doctorId, setShowEditModal, appointment, setReload }) {
         visitType: appointment.visitType,
         doctorId: doctorId,
     });
+    
 
     const [errors, setErrors] = useState("");
 
@@ -22,7 +23,7 @@ function EditModal({ doctorId, setShowEditModal, appointment, setReload }) {
         event.preventDefault();
         const response = await updateAppointment(appointment.id, formData);
         if (response) {
-            setErrors(response)
+            setErrors(response);
         } else {
             setShowEditModal(false);
             setReload(true);
@@ -30,20 +31,14 @@ function EditModal({ doctorId, setShowEditModal, appointment, setReload }) {
     }
 
     const handleTimeChange = (event) => {
-        setErrors('')
+        setErrors("");
         const { name, value } = event.target;
-        let minutes = value.split(":")[1];
-        if (
-            minutes !== "00" &&
-            minutes !== "15" &&
-            minutes !== "30" &&
-            minutes !== "45"
-        ) {
+        if (!checkMinutes(value)) {
             setErrors(
                 "Appointments can only be scheduled at :00, :15, :30, or :45"
             );
             setFormData({ ...formData, [name]: appointment.time });
-            return
+            return;
         }
         setFormData({ ...formData, [name]: value });
     };
@@ -98,6 +93,12 @@ function EditModal({ doctorId, setShowEditModal, appointment, setReload }) {
             </div>
             <button type="submit" className="btn btn-primary">
                 Submit
+            </button>
+            <button
+                className="btn btn-secondary"
+                onClick={() => setShowEditModal(false)}
+            >
+                Cancel
             </button>
         </form>
     );
