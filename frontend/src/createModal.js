@@ -93,6 +93,12 @@ function CreateModal({ doctorId, setShowCreateModal, setReload }) {
             <button type="submit" className="btn btn-primary">
                 Submit
             </button>
+            <button
+                className="btn btn-secondary"
+                onClick={() => setShowCreateModal(false)}
+            >
+                Cancel
+            </button>
         </form>
     );
 }
