@@ -1,10 +1,10 @@
 To run the app: 
 ```
-// CD into backend
+// cd into backend
 npm install
 npm run dev
 
-//CD into frontend
+//cd into frontend
 npm install
 npm run start
 
